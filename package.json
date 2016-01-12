@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/martianfield/snowflea/issues"
   },
-  "homepage": "https://github.com/martianfield/snowflea#readme"
+  "homepage": "https://github.com/martianfield/snowflea#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.2.0",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "mongodb": "^2.1.4"
+  }
 }

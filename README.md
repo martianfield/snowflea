@@ -1,4 +1,8 @@
 # snowflea
+
 Datastore abstraction layer
 
-Für Moira :)
+- `create(<collection>, <obj>)`
+- `read(<collection>).where(<condition>).limit(<number>).order(<ordering>)`
+- `update(<collection>, <obj>)`
+- `delete(<collection>, <obj>)`
