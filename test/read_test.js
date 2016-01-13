@@ -1,4 +1,5 @@
 'use strict';
+
 const chai = require('chai');
 const chai_as_promised = require('chai-as-promised');
 chai.use(chai_as_promised);
@@ -33,9 +34,25 @@ describe("Read", () => {
     return snowflea.readAll(collection).should.eventually.have.length(3);
   });
 
+  it(('readAll() with limit'), () => {
+    let options = { limit: 2 };
+    return snowflea.readAll(collection, options).should.eventually.have.length(2);
+  });
+
+  it(('readAll() with sort'), () => {
+    // TODO
+  });
+
+  it(('readOne()'), () => {
+    let name = created_items[0].name;
+    let filter = { name: name };
+    return snowflea.readOne(collection, filter).should.eventually.have.property('name', name);
+  });
+
   it(('readOneById()'), () => {
     let id = created_items[0]._id;
-    return expect(snowflea.readOneById(collection,id)).to.eventually.have.property('name', 'Pip');
-    return snowflea.readOneById(collection, id).should.eventually.have.property('name', 'Pip');
+    let name = created_items[0].name;
+    //return expect(snowflea.readOneById(collection,id)).to.eventually.have.property('name', name);
+    return snowflea.readOneById(collection, id).should.eventually.have.property('name', name);
   })
 });
