@@ -17,9 +17,9 @@ describe("Read", () => {
     return snowflea.deleteAll(collection)
       .then((count) => {
         return snowflea.createMany(collection, [
-          {"name": "Pip"},
-          {"name": "Pop"},
-          {"name": "Pap"}
+          {"name": "Bonnie", "age": 24},
+          {"name": "Connie", "age": 22},
+          {"name": "Annie", "age": 24}
         ]);
       })
       .then((items) => {
@@ -39,20 +39,26 @@ describe("Read", () => {
     return snowflea.readAll(collection, options).should.eventually.have.length(2);
   });
 
-  it(('readAll() with sort'), () => {
-    // TODO
+  it(('readAll() with sort ASC'), () => {
+    let sort = {'name': snowflea.sort.ASC };
+    let options = { sort: sort};
+    snowflea.readAll(collection, options).should.eventually.satisfy((results) => results[0].name === 'Annie');
   });
 
   it(('readOne()'), () => {
     let name = created_items[0].name;
-    let filter = { name: name };
-    return snowflea.readOne(collection, filter).should.eventually.have.property('name', name);
+    return snowflea.readOne(collection).should.eventually.satisfy((result) => result.name === name);
+  });
+
+  it(('readOne() with sort ASC'), () => {
+    let options = {};
+    options.sort = {'name': snowflea.sort.ASC };
+    return snowflea.readOne(collection, options).should.eventually.satisfy((result) => result.name === 'Annie');
   });
 
   it(('readOneById()'), () => {
     let id = created_items[0]._id;
     let name = created_items[0].name;
-    //return expect(snowflea.readOneById(collection,id)).to.eventually.have.property('name', name);
-    return snowflea.readOneById(collection, id).should.eventually.have.property('name', name);
+    snowflea.readOneById(collection, id).should.eventually.satisfy((result) => result.name === name);
   })
 });

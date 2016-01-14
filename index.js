@@ -10,5 +10,6 @@ module.exports.updateMany = require(__dirname + '/lib/update.js').updateMany;
 module.exports.deleteOne = require(__dirname + '/lib/delete.js').deleteOne;
 module.exports.deleteAll = require(__dirname + '/lib/delete.js').deleteAll;
 
+module.exports.sort = require(__dirname + '/lib/sort.js');
 
 
