@@ -7,11 +7,10 @@ chai.use(chai_as_promised);
 const should = chai.should();
 const expect = chai.expect;
 const snowflea = require(__dirname + '/../index.js');
-const database = require(__dirname + '/../lib/database.js');
 
 
 describe("Read", () => {
-  database.set('uri', 'mongodb://localhost:27017/test');
+  snowflea.database.set('uri', 'mongodb://localhost:27017/test');
   let collection = 'snowflea_test_read';
   let created_items = [];
   before(() => {

@@ -11,5 +11,7 @@ module.exports.deleteOne = require(__dirname + '/lib/delete.js').deleteOne;
 module.exports.deleteAll = require(__dirname + '/lib/delete.js').deleteAll;
 
 module.exports.sort = require(__dirname + '/lib/sort.js');
+module.exports.database = require(__dirname + '/lib/database.js')
+
 
 

@@ -14,11 +14,10 @@ iceworm.extend('mongo', iceworm_mongo)
 
 // internal modules
 const snowflea = require(__dirname + '/../index.js')
-const database = require(__dirname + '/../lib/database.js')
 
 
 describe("Read with Schema", () => {
-  database.set('uri', 'mongodb://localhost:27017/test')
+  snowflea.database.set('uri', 'mongodb://localhost:27017/test')
   let collection = 'snowflea_test_read_schema'
   let created_items = [];
   before(() => {

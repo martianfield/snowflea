@@ -6,12 +6,10 @@ chai.use(chai_as_promised);
 const should = chai.should();
 const expect = chai.expect;
 const snowflea = require(__dirname + '/../index.js');
-const database = require(__dirname + '/../lib/database.js');
-
 
 describe("Create", () => {
   beforeEach(() => {
-    database.set('uri', 'mongodb://localhost:27017/test');
+    snowflea.database.set('uri', 'mongodb://localhost:27017/test');
     return snowflea.deleteAll('snowflea_test_read')
       .then((count) => {
 
