@@ -62,7 +62,7 @@ describe("Read", () => {
   });
 
   it(('readOneById()'), () => {
-    let id = created_items[0]._id;
+    let id = String(created_items[0]._id);
     let name = created_items[0].name;
     snowflea.readOneById(collection, id).should.eventually.satisfy((result) => result.name === name);
   })
