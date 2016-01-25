@@ -2,7 +2,7 @@
 const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
-const snowflea = require(__dirname + '/../index.js');
+const snowflea = require(__dirname + '/../index.js')
 
 describe("Read", () => {
   let cat_schema
@@ -60,6 +60,18 @@ describe("Read", () => {
     snowflea.read({"name": "Amy"}, cat_schema)
       .then((result) => {
         expect(result.length).to.equal(1)
+        done()
+      })
+      .catch((err) => { done(new Error(err.message)) })
+  })
+
+  it(('projection'), (done) => {
+    snowflea.read({"name": "Amy"}, cat_schema)
+      .then((result) => {
+        let cat = result[0]
+        cat.hasOwnProperty('name').should.equal(true)
+        cat.hasOwnProperty('age').should.equal(true)
+        cat.hasOwnProperty('secret').should.equal(false)
         done()
       })
       .catch((err) => { done(new Error(err.message)) })
