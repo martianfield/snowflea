@@ -18,13 +18,12 @@
   "homepage": "https://github.com/martianfield/snowflea#readme",
   "devDependencies": {
     "chai": "^3.4.1",
-    "chai-as-promised": "^5.2.0",
     "mocha": "^2.3.4"
   },
   "dependencies": {
-    "iceworm": "^0.4.0",
-    "iceworm-mongo": "^0.2.1",
+    "iceworm": "~0.5.0",
+    "iceworm-mongo": "~0.2.0",
     "mongodb": "^2.1.4",
-    "setthings": "^0.1.1"
+    "setthings": "0.1.1"
   }
 }

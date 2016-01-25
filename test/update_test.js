@@ -1,3 +1,4 @@
+/*
 'use strict';
 const chai = require('chai');
 const chai_as_promised = require('chai-as-promised');
@@ -37,3 +38,4 @@ describe("Update", () => {
       })
   })
 })
+*/

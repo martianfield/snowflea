@@ -1,3 +1,4 @@
+/*
 'use strict';
 
 // testing modules
@@ -55,3 +56,4 @@ describe("Read with Schema", () => {
     })
   })
 })
+*/

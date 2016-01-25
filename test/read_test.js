@@ -1,69 +1,67 @@
 'use strict';
-
-const chai = require('chai');
-const chai_as_promised = require('chai-as-promised');
-chai.use(chai_as_promised);
-
-const should = chai.should();
-const expect = chai.expect;
+const chai = require('chai')
+const should = chai.should()
+const expect = chai.expect
 const snowflea = require(__dirname + '/../index.js');
 
-
 describe("Read", () => {
-  snowflea.database.set('uri', 'mongodb://localhost:27017/test');
-  let collection = 'snowflea_test_read';
-  let created_items = [];
-  before(() => {
-    return snowflea.deleteAll(collection)
-      .then((count) => {
-        return snowflea.createMany(collection, [
-          {"name": "Bonnie", "age": 24},
-          {"name": "Connie", "age": 22},
-          {"name": "Annie", "age": 24}
-        ]);
+  let cat_schema
+  let cats
+  before((done) => {
+    snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
+    cat_schema = snowflea.Schema.create(
+      {
+        name: '*string',
+        age: 'int>0',
+        secret: '-string'
+      },
+      {
+        collection: 'snowflea_cats'
+      }
+    )
+    snowflea.drop(cat_schema.options.collection)
+      .then(() => {
+        snowflea.create([
+          { name: 'Amy', age: 2, secret: 'lies about her age' },
+          { name: 'Cassandra', age: 6, secret: 'has no secrets' }
+        ], cat_schema)
       })
-      .then((items) => {
-        created_items = items;
+      .then((result) => {
+        // TODO result is undefined
+        cats = result
+        done()
       })
       .catch((err) => {
-        console.log("ERROR:", err.message);
-      });
-  });
-  after(() => {
-    snowflea.deleteAll(collection)
-      .then((count) => {})
-      .catch((err) => { console.log("Error:", err.message )})
-  });
+        done(new Error("Unexpected Error:", err.message))
+      })
 
-  it(('readAll()'), () => {
-    return snowflea.readAll(collection).should.eventually.have.length(3);
-  });
-
-  it(('readAll() with limit'), () => {
-    let options = { limit: 2 };
-    return snowflea.readAll(collection, options).should.eventually.have.length(2);
-  });
-
-  it(('readAll() with sort ASC'), () => {
-    let sort = {'name': snowflea.sort.ASC };
-    let options = { sort: sort};
-    snowflea.readAll(collection, options).should.eventually.satisfy((results) => results[0].name === 'Annie');
-  });
-
-  it(('readOne()'), () => {
-    let name = created_items[0].name;
-    return snowflea.readOne(collection).should.eventually.satisfy((result) => result.name === name);
-  });
-
-  it(('readOne() with sort ASC'), () => {
-    let options = {};
-    options.sort = {'name': snowflea.sort.ASC };
-    return snowflea.readOne(collection, options).should.eventually.satisfy((result) => result.name === 'Annie');
-  });
-
-  it(('readOneById()'), () => {
-    let id = String(created_items[0]._id);
-    let name = created_items[0].name;
-    snowflea.readOneById(collection, id).should.eventually.satisfy((result) => result.name === name);
   })
-});
+
+  after((done) => {
+    snowflea.drop(cat_schema.options.collection)
+      .then((result) => {
+        done()
+      })
+      .catch((err) => {
+        done(new Error("Unexepcted Error:", err.message))
+      })
+  })
+
+  it(('read (without filter)'), (done) => {
+    snowflea.read({}, cat_schema)
+      .then((result) => {
+        expect(result.length).to.equal(2)
+        done()
+      })
+      .catch((err) => { done(new Error(err.message)) })
+  })
+
+  it(('read (with filter)'), (done) => {
+    snowflea.read({"name": "Amy"}, cat_schema)
+      .then((result) => {
+        expect(result.length).to.equal(1)
+        done()
+      })
+      .catch((err) => { done(new Error(err.message)) })
+  })
+})
