@@ -47,6 +47,17 @@ describe("Read", () => {
       })
   })
 
+  it('missing collection', (done) => {
+    let s = snowflea.Schema.create({"name":"string"})
+    snowflea.read({}, s)
+      .then((result) => {
+        done(new Error("should not arrive here"))
+      })
+      .catch((err) => {
+        done()
+      })
+  })
+
   it(('read (without filter)'), (done) => {
     snowflea.read({}, cat_schema)
       .then((result) => {

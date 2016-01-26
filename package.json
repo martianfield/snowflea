@@ -21,7 +21,7 @@
     "mocha": "^2.3.4"
   },
   "dependencies": {
-    "iceworm": "0.5.4",
+    "iceworm": "0.5.5",
     "iceworm-mongo": "~0.2.0",
     "mongodb": "^2.1.4",
     "setthings": "0.1.1"
