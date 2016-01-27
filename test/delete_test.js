@@ -2,22 +2,30 @@
 const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
-const snowflea = require(__dirname + '/../index.js');
+const snowflea = require(__dirname + '/../index.js')
 
-describe("Create", () => {
+describe("Delete", () => {
   let cat_schema
-  before(() => {
+  before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
     cat_schema = snowflea.Schema.create(
       {
-        name: '*string',
-        age: 'int>0',
-        secret: '-string'
+        name: '*string'
       },
       {
         collection: 'snowflea_cats'
       }
     )
+    let objs = [
+      {"name": "Tam"}, {"name": "Tom"}, {"name": "Tim"}
+    ]
+    snowflea.create(objs, cat_schema)
+      .then(() => {
+        done()
+      })
+      .catch((err) => {
+        done(new Error(err.message))
+      })
   })
 
   after((done) => {
@@ -30,6 +38,28 @@ describe("Create", () => {
       })
   })
 
+  it("delete one", (done) => {
+    return snowflea.delete({"name":"Tam"}, cat_schema)
+      .then((result) => {
+        result.count.should.equal(1)
+        done()
+      })
+      .catch((err) => {
+        done(new Error("received unexpected error: " + err.message))
+      })
+  })
+
+  it("delete all", (done) => {
+    return snowflea.delete({}, cat_schema)
+      .then((result) => {
+        result.count.should.equal(2)
+        done()
+      })
+      .catch((err) => {
+        done(new Error("received unexpected error: " + err.message))
+      })
+  })
+  /*
   it(('create()'), (done) => {
     return snowflea.create({name: 'Tom', age: 3, secret: 'hates fish'}, cat_schema)
       .then((result) => {
@@ -76,4 +106,5 @@ describe("Create", () => {
         done(new Error("received unexpected error: " + err.message))
       })
   })
+  */
 })
