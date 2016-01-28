@@ -86,7 +86,8 @@ describe('Update', () => {
 
   it('update many', (done) => {
     let filter = { age: 22}
-    let data = {$set: {age: 23}}
+
+    let data = {age:23}
     let options = {upsert:false, many:true}
     snowflea.update(filter, data, schema, options)
       .then(result => {
@@ -100,12 +101,38 @@ describe('Update', () => {
       })
   })
 
-  // TODO check for validation errors (waiting for Iceworm to implement update validation, e.g. ignoring required field validation)
-  /*
   it('invalid data', (done) => {
     let filter = { name: 'Tom'}
     let data = { age: 'not an int'}
 
+    snowflea.update(filter, data, schema)
+      .then(() => {
+        done(new Error("this should never succeed"))
+      })
+      .catch(err => {
+        done()
+      })
   })
-  */
+
+  // TODO test projecting data
+  it('projecting data', (done) => {
+    done()
+  })
+
+  // TODO when upserting is enabled, required fields ARE required
+  it('upsert needs required fields', (done) => {
+    let options = { upsert:true}
+    let filter = {name:'does not exit'}
+    let data = {age:12} // is missing the required 'name' field
+
+    snowflea.update(filter, data, schema, options)
+      .then(() => {
+        done(new Error("this should never succeed"))
+      })
+      .catch((err) => {
+        // TODO might want to have a real look at the error here
+        err.errors.length.should.equal(1)
+        done()
+      })
+  })
 })
