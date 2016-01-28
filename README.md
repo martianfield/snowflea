@@ -75,6 +75,24 @@ Passed objects are evaluated against the schema provided:
 - projection will ruthlessly remove any fields of the passed objects that are not part of the schema before saving them
 
 
+### Update
+
+The `update()` method can be used to update one or many items:
+
+```javascript
+snowflea.update(<filter>, <data>, <schema> [, <options>])
+```
+
+The optional `options` object lets you specify:
+
+- `upsert` (boolean) - if you want to allow upserts (default: `false`)
+- `many` (boolean) - if only one or many matching documents should be affected (default: `false`)
+
+The `update()` method returns a promise which
+
+- resolves to an object containing an array of affected documents (`documents`)
+- or rejects with an `Error`
+
 ### Errors
 
 Create and update operations use the schema to validate objects passed. Any validation errors will cause the Promise to decline and return an object containing the errors.
