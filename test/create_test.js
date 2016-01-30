@@ -35,7 +35,6 @@ describe("Create", () => {
       .then((result) => {
         expect(result.length).to.equal(1)
         expect(result[0]).to.have.property('_id')
-        expect(result[0]).to.have.property('secret')
         done()
       })
       .catch((err) => {

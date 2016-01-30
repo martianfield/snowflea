@@ -119,7 +119,6 @@ describe('Update', () => {
     done()
   })
 
-  // TODO when upserting is enabled, required fields ARE required
   it('upsert needs required fields', (done) => {
     let options = { upsert:true}
     let filter = {name:'does not exit'}
