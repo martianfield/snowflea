@@ -1,12 +1,13 @@
 'use strict'
 
 const snowflea = require(__dirname + '/../index.js')
+const Schema = snowflea.Schema
 
 // settings
 snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
 
 // schema
-let cat_schema = snowflea.Schema.create(
+let cat_schema = new Schema(
   {
     name: '*string',
     age: 'int>0',
@@ -21,7 +22,7 @@ createOne()
 
 function createOne() {
   // let's start by creating a cat
-  snowflea.create({name: 'Tom', age: 3, secret: 'hates fish'}, cat_schema)
+  cat_schema.create({name: 'Tom', age: 3, secret: 'hates fish'})
     .then((result) => {
       console.log('created a cat:', result[0])
     })
@@ -34,10 +35,10 @@ function createOne() {
 
 function createLitter() {
   // let's create a litter
-  snowflea.create([
+  cat_schema.create([
       { name: 'Amy', age: 2, secret: 'lies about her age' },
       { name: 'Cassandra', age: 6, secret: 'has no secrets' }
-    ], cat_schema)
+    ])
     .then((result) => {
       console.log('created cats:', result)
     })
@@ -49,7 +50,7 @@ function createLitter() {
 
 function createInvalid() {
   // let us attempt to create an object that does not follow the schema
-  snowflea.create({age:'Johnny'}, cat_schema)
+  cat_schema.create({age:'Johnny'})
     .then((result) => {
       console.log("this will not happen")
       console.log(result)
@@ -63,7 +64,7 @@ function createInvalid() {
 
 function createProjected() {
   // fields that are not part of the schema will not be saved
-  snowflea.create({name:"Timmy", stuff:["this", "will", "not", "save"] }, cat_schema)
+  cat_schemacreate({name:"Timmy", stuff:["this", "will", "not", "save"] })
     .then((result) => {
       console.log("does not have .stuff")
       console.log(result)

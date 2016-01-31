@@ -16,7 +16,7 @@ const snowflea = require('snowflea')
 snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
 
 // schema
-let cat_schema = snowflea.Schema.create(
+let cat_schema = new snowflea.Schema(
   {
     name: '*string',
     age: 'int>0',
@@ -28,7 +28,7 @@ let cat_schema = snowflea.Schema.create(
 )
 
 // let insert a cat
-snowflea.create({ name: 'Tom', age: 3, secret: 'hates fish' }, cat_schema)
+cat_schema.create({ name: 'Tom', age: 3, secret: 'hates fish' })
   .then((result) => {
     console.log('created a cat:', result[0])
   })
@@ -48,19 +48,22 @@ Snowflea knows four methods to do CRUD (I hope you are sitting):
 - `update()`
 - `delete()`
 
-All four return a Promise.
+They 
+
+- are implemented as extensions to Iceworm's Schema class
+- return a Promise.
 
 ### Create
 
 The `create()` method can be used to insert one or many items:
 
-- one: `create(<obj_to_insert>, <schema>)`
-- many: `create(<[obj1, obj2, ... objn]>, <schema>)`
+- one: `create(<obj_to_insert>)`
+- many: `create(<[obj1, obj2, ... objn]>)`
 
 The method returns a Promise which returns an array of created objects (if successful) or an error object.
 
 ```javascript
-snowflea.create(cat, cat_schema)
+my_schema.create(cat)
     .then((docs) => {
         console.log(docs)
     })
@@ -74,13 +77,33 @@ Passed objects are evaluated against the schema provided:
 - if validation fails, the create operation fails and returns an error (see section on Errors)
 - projection will ruthlessly remove any fields of the passed objects that are not part of the schema before saving them
 
+### Read
+
+The `read()` method returns object(s) matching a mongo query document. Any projection defined in your schema will be used (i.e. hidden fields will not be delivered).
+
+```javascript
+let query = { "name":"Amy" }
+my_schema.read({query})
+    .then((result) => {
+        console.log(result)
+    })
+    .catch((err) => {
+        console.error(err)
+    })
+```
 
 ### Update
 
 The `update()` method can be used to update one or many items:
 
 ```javascript
-snowflea.update(<filter>, <data>, <schema> [, <options>])
+my_schema.update(<filter>, <data>[, <options>])
+    .then((result) => {
+        console.log(result)
+    })
+    .then((err) => {
+        console.error(err)
+    })
 ```
 
 The optional `options` object lets you specify:
@@ -92,6 +115,23 @@ The `update()` method returns a promise which
 
 - resolves to an object containing an array of affected documents (`documents`)
 - or rejects with an `Error`
+
+
+### Delete
+
+The `delete()` method removes object(s) matching a mongo query document.
+
+```javascript
+let query = { "name":"Amy" }
+my_schema.remove({query})
+    .then((result) => {
+        console.log(result)
+    })
+    .catch((err) => {
+        console.error(err)
+    })
+```
+
 
 ### Errors
 

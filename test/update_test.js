@@ -8,7 +8,7 @@ describe('Update', () => {
   let schema
   before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    schema = snowflea.Schema.create(
+    schema = new snowflea.Schema(
       {
         name: '*string',
         age : 'int'
@@ -20,7 +20,7 @@ describe('Update', () => {
     let objs = [
       {"name": "Tam", age: 20}, {"name": "Tom", age: 22}, {"name": "Tim", age: 22}
     ]
-    snowflea.create(objs, schema)
+    schema.create(objs)
       .then(() => {
         done()
       })
@@ -41,7 +41,7 @@ describe('Update', () => {
   it('update one', (done) => {
     let filter = {name:'Tam'}
     let data = {name:'TAM'}
-    snowflea.update(filter, data, schema)
+    schema.update(filter, data)
       .then((result) => {
         result.matchedCount.should.equal(1)
         result.modifiedCount.should.equal(1)
@@ -56,7 +56,7 @@ describe('Update', () => {
   it('update none', (done) => {
     let filter = { name: 'Sam'}
     let data = {name : 'Sim'}
-    snowflea.update(filter, data, schema)
+    schema.update(filter, data)
       .then((result) => {
         result.matchedCount.should.equal(0)
         result.modifiedCount.should.equal(0)
@@ -72,7 +72,7 @@ describe('Update', () => {
     let filter = { name: 'Sam'}
     let data = {name : 'Sam'}
     let options = {upsert:true, many: false}
-    snowflea.update(filter, data, schema, options)
+    schema.update(filter, data, options)
       .then((result) => {
         result.matchedCount.should.equal(1)
         result.modifiedCount.should.equal(0)
@@ -89,7 +89,7 @@ describe('Update', () => {
 
     let data = {age:23}
     let options = {upsert:false, many:true}
-    snowflea.update(filter, data, schema, options)
+    schema.update(filter, data, options)
       .then(result => {
         result.matchedCount.should.equal(2)
         result.modifiedCount.should.equal(2)
@@ -105,7 +105,7 @@ describe('Update', () => {
     let filter = { name: 'Tom'}
     let data = { age: 'not an int'}
 
-    snowflea.update(filter, data, schema)
+    schema.update(filter, data)
       .then(() => {
         done(new Error("this should never succeed"))
       })
@@ -124,7 +124,7 @@ describe('Update', () => {
     let filter = {name:'does not exit'}
     let data = {age:12} // is missing the required 'name' field
 
-    snowflea.update(filter, data, schema, options)
+    schema.update(filter, data, options)
       .then(() => {
         done(new Error("this should never succeed"))
       })

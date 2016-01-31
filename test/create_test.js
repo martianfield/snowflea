@@ -8,16 +8,14 @@ describe("Create", () => {
   let cat_schema
   before(() => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    cat_schema = snowflea.Schema.create(
-      {
-        name: '*string',
-        age: 'int>0',
-        secret: '-string'
-      },
-      {
-        collection: 'snowflea_cats'
-      }
-    )
+    let raw_schema = {
+      name: '*string',
+      age: 'int>0',
+      secret: '-string'
+    }
+    let options = { collection: 'snowflea_cats'}
+    cat_schema = new snowflea.Schema(raw_schema, options)
+    cat_schema.create()
   })
 
   after((done) => {
@@ -31,7 +29,20 @@ describe("Create", () => {
   })
 
   it(('create()'), (done) => {
-    return snowflea.create({name: 'Tom', age: 3, secret: 'hates fish'}, cat_schema)
+    return cat_schema.create({name: 'Tom', age: 3, secret: 'hates fish'})
+      .then((result) => {
+        expect(result.length).to.equal(1)
+        expect(result[0]).to.have.property('_id')
+        done()
+      })
+      .catch((err) => {
+        done(new Error("received unexpected error: " + err.message))
+      })
+  })
+
+  it('create (from schema)', (done) => {
+
+    return cat_schema.create({name: 'Tom', age: 3, secret: 'hates fish'})
       .then((result) => {
         expect(result.length).to.equal(1)
         expect(result[0]).to.have.property('_id')
@@ -43,7 +54,7 @@ describe("Create", () => {
   })
 
   it(('create() missing required'), (done) => {
-    return snowflea.create({age:3}, cat_schema)
+    return cat_schema.create({age:3})
       .then((result) => {
         // this should never happen
         done(new Error('saved object that should not have been saved'))
@@ -55,7 +66,7 @@ describe("Create", () => {
   })
 
   it(('create() superfluous field'), (done) => {
-    return snowflea.create({name:"Amelia", superfluous:'something'}, cat_schema)
+    return cat_schema.create({name:"Amelia", superfluous:'something'})
       .then((result) => {
         expect(result[0]).to.not.have.property('superfluous')
         done()
@@ -66,7 +77,7 @@ describe("Create", () => {
   })
 
   it(('create() typecasting number'), (done) => {
-    return snowflea.create({name:"Amelia", age:'12'}, cat_schema)
+    return cat_schema.create({name:"Amelia", age:'12'})
       .then((result) => {
         expect(typeof result[0].age).to.equal('number')
         done()

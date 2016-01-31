@@ -14,7 +14,7 @@ describe("utility", () => {
       scottish: '-*bool',
       amish: '-bool'
     }
-    let schema = snowflea.Schema.create(schema_raw)
+    let schema = new snowflea.Schema(schema_raw)
 
     expect(utility.getProjection(schema)).to.deep.equal({scottish:0, amish:0})
 

@@ -9,7 +9,7 @@ describe("Read", () => {
   let cats
   before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    cat_schema = snowflea.Schema.create(
+    cat_schema = new snowflea.Schema(
       {
         name: '*string',
         age: 'int>0',
@@ -21,10 +21,10 @@ describe("Read", () => {
     )
     snowflea.drop(cat_schema.options.collection)
       .then(() => {
-        snowflea.create([
+        cat_schema.create([
           { name: 'Amy', age: 2, secret: 'lies about her age' },
           { name: 'Cassandra', age: 6, secret: 'has no secrets' }
-        ], cat_schema)
+        ])
       })
       .then((result) => {
         // TODO result is undefined
@@ -48,8 +48,8 @@ describe("Read", () => {
   })
 
   it('missing collection', (done) => {
-    let s = snowflea.Schema.create({"name":"string"})
-    snowflea.read({}, s)
+    let s = new snowflea.Schema({"name":"string"})
+    s.read({})
       .then((result) => {
         done(new Error("should not arrive here"))
       })
@@ -59,7 +59,7 @@ describe("Read", () => {
   })
 
   it(('read (without filter)'), (done) => {
-    snowflea.read({}, cat_schema)
+    cat_schema.read({})
       .then((result) => {
         expect(result.length).to.equal(2)
         done()
@@ -68,7 +68,7 @@ describe("Read", () => {
   })
 
   it(('read (with filter)'), (done) => {
-    snowflea.read({"name": "Amy"}, cat_schema)
+    cat_schema.read({"name": "Amy"})
       .then((result) => {
         expect(result.length).to.equal(1)
         done()
@@ -77,7 +77,7 @@ describe("Read", () => {
   })
 
   it(('projection'), (done) => {
-    snowflea.read({"name": "Amy"}, cat_schema)
+    cat_schema.read({"name": "Amy"})
       .then((result) => {
         let cat = result[0]
         cat.hasOwnProperty('name').should.equal(true)

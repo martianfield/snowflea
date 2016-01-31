@@ -8,7 +8,7 @@ describe("Delete", () => {
   let cat_schema
   before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    cat_schema = snowflea.Schema.create(
+    cat_schema = new snowflea.Schema(
       {
         name: '*string'
       },
@@ -19,7 +19,7 @@ describe("Delete", () => {
     let objs = [
       {"name": "Tam"}, {"name": "Tom"}, {"name": "Tim"}
     ]
-    snowflea.create(objs, cat_schema)
+    cat_schema.create(objs)
       .then(() => {
         done()
       })
@@ -39,7 +39,7 @@ describe("Delete", () => {
   })
 
   it("delete one", (done) => {
-    return snowflea.delete({"name":"Tam"}, cat_schema)
+    return cat_schema.delete({"name":"Tam"})
       .then((result) => {
         result.count.should.equal(1)
         done()
@@ -50,7 +50,7 @@ describe("Delete", () => {
   })
 
   it("delete all", (done) => {
-    return snowflea.delete({}, cat_schema)
+    cat_schema.delete({})
       .then((result) => {
         result.count.should.equal(2)
         done()
