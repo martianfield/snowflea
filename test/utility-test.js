@@ -2,6 +2,7 @@
 const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
+const Schema = require('iceworm').Schema
 const snowflea = require(__dirname + '/../index.js')
 const utility = require(__dirname + '/../lib/utility.js')
 
@@ -14,7 +15,7 @@ describe("utility", () => {
       scottish: '-*bool',
       amish: '-bool'
     }
-    let schema = new snowflea.Schema(schema_raw)
+    let schema = new Schema(schema_raw)
 
     expect(utility.getProjection(schema)).to.deep.equal({scottish:0, amish:0})
 

@@ -6,20 +6,24 @@ const iceworm = require('iceworm')
 module.exports.set = require('setthings').set
 module.exports.settings = require('setthings').settings
 
-// iceworm Schema extension
+// iceworm schema extension
 const create_func = require(__dirname + '/lib/create.js')
 const read_func = require(__dirname + '/lib/read.js')
 const update_func = require(__dirname + '/lib/update.js')
 const delete_func = require(__dirname + '/lib/delete.js')
-class Schema extends iceworm.Schema {
-  create(obj) { return create_func(obj, this) }
-  read(filter) { return read_func(filter, this) }
-  update(filter, data, options) { return update_func(filter, data, options, this) }
-  delete(filter) { return delete_func(filter, this) }
+const use = (schema, collection) => {
+  if(schema.options === undefined) {
+    schema.options = {}
+  }
+  schema.options.collection = collection
+  schema.__proto__.create = (obj) => { return create_func(obj, schema) }
+  schema.__proto__.read = (filter) => { return read_func(filter, schema) }
+  schema.__proto__.update = (filter, data, options) => { return update_func(filter, data, options, schema) }
+  schema.__proto__.delete = (filter) => { return delete_func(filter, schema) }
 }
+module.exports.use = use
 
-module.exports.Schema = Schema
-
+// other
 module.exports.drop = require(__dirname + '/lib/drop.js')
 
 // If the Node process ends, close the db connection

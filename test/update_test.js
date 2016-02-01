@@ -3,20 +3,19 @@ const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
 const snowflea = require(__dirname + '/../index.js')
+const Schema = require('iceworm').Schema
 
 describe('Update', () => {
   let schema
   before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    schema = new snowflea.Schema(
+    schema = new Schema(
       {
         name: '*string',
         age : 'int'
-      },
-      {
-        collection: 'snowflea_test_update'
       }
     )
+    snowflea.use(schema, 'snowflea_cats')
     let objs = [
       {"name": "Tam", age: 20}, {"name": "Tom", age: 22}, {"name": "Tim", age: 22}
     ]

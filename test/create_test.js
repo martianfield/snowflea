@@ -3,6 +3,7 @@ const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
 const snowflea = require(__dirname + '/../index.js');
+const Schema = require('iceworm').Schema
 
 describe("Create", () => {
   let cat_schema
@@ -13,9 +14,8 @@ describe("Create", () => {
       age: 'int>0',
       secret: '-string'
     }
-    let options = { collection: 'snowflea_cats'}
-    cat_schema = new snowflea.Schema(raw_schema, options)
-    cat_schema.create()
+    cat_schema = new Schema(raw_schema)
+    snowflea.use(cat_schema, 'snowflea_cats')
   })
 
   after((done) => {

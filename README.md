@@ -11,23 +11,25 @@ CRUD operations based on Iceworm schemata.
 'use strict'
 
 const snowflea = require('snowflea')
+const Schema = require('iceworm').Schema
 
 // settings
 snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
 
 // schema
-let cat_schema = new snowflea.Schema(
+let cat_schema = new Schema(
   {
     name: '*string',
     age: 'int>0',
     secret: '-string'
-  },
-  {
-    collection: 'cats'
   }
 )
 
-// let insert a cat
+// use the schema
+snowflea.use(cat_schema, 'cats')
+
+
+// insert a cat
 cat_schema.create({ name: 'Tom', age: 3, secret: 'hates fish' })
   .then((result) => {
     console.log('created a cat:', result[0])
@@ -36,6 +38,15 @@ cat_schema.create({ name: 'Tom', age: 3, secret: 'hates fish' })
     console.error(err.message)
   })
 
+```
+
+## Schema Creation
+
+Snowflea extends Iceworm's `Schema` with mongo CRUD operations. To use an Iceworm schema with Snowflea, use the `use` function. It takes a schema and the name of the mongo collection the schema belongs to:
+
+```javascript
+let schema = new iceworm.Schema({'name': '*string'})
+snowflea.use(schema, 'companions')`
 ```
 
 

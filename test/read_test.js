@@ -3,22 +3,21 @@ const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
 const snowflea = require(__dirname + '/../index.js')
+const Schema = require('iceworm').Schema
 
 describe("Read", () => {
   let cat_schema
   let cats
   before((done) => {
     snowflea.set('mongo.uri', 'mongodb://localhost:27017/test')
-    cat_schema = new snowflea.Schema(
+    cat_schema = new Schema(
       {
         name: '*string',
         age: 'int>0',
         secret: '-string'
-      },
-      {
-        collection: 'snowflea_cats'
       }
     )
+    snowflea.use(cat_schema, 'snowflea_cats')
     snowflea.drop(cat_schema.options.collection)
       .then(() => {
         cat_schema.create([
@@ -44,17 +43,6 @@ describe("Read", () => {
       })
       .catch((err) => {
         done(new Error("Unexepcted Error:", err.message))
-      })
-  })
-
-  it('missing collection', (done) => {
-    let s = new snowflea.Schema({"name":"string"})
-    s.read({})
-      .then((result) => {
-        done(new Error("should not arrive here"))
-      })
-      .catch((err) => {
-        done()
       })
   })
 
