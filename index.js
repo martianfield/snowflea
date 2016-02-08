@@ -26,6 +26,12 @@ module.exports.use = use
 // other
 module.exports.drop = require(__dirname + '/lib/drop.js')
 
+// crud functions
+module.exports.create = create_func
+module.exports.read = read_func
+module.exports.update = update_func
+module.exports.delete = delete_func
+
 // If the Node process ends, close the db connection
 const database = require(__dirname + '/lib/database.js')
 process.on('SIGINT', function() {
