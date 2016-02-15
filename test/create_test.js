@@ -1,8 +1,9 @@
-'use strict';
+'use strict'
+
 const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
-const snowflea = require(__dirname + '/../index.js');
+const snowflea = require(__dirname + '/../index.js')
 const Schema = require('iceworm').Schema
 
 describe("Create", () => {
